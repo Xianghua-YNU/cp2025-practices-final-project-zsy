@@ -44,3 +44,35 @@ def Gauss_Seidel(Nx, Ny, l_2):
     L = np.array(L)
     iteration = np.array(iteration)
     return T[1:Nx+1, 1:Ny+1], iteration, L
+
+def Jacobi(A,b,x0,TOL):
+    D=np.diag(np.diag(A))
+    U=-np.triu(A,1)
+    L=-np.tril(A,-1)
+    Tj=np.linalg.inv(D)@(L+U)
+    cj=np.linalg.inv(D)@b
+    x=Tj@x0+cj
+    itr = 1
+    max_itr=50
+    while (max(abs(x-x0))/max(abs(x))>TOL) and (itr<max_itr):
+        x0=x
+        x=Tj@x0+cj
+        itr += 1
+    return [Tj,x,itr]
+
+def Gauss(A,b,x0,TOL):
+    D=np.diag(np.diag(A))
+    U=-np.triu(A,1)
+    L=-np.tril(A,-1)
+
+    Tg=(np.linalg.inv(D-L))@U
+    cg=np.linalg.inv(D-L)@b
+    x=Tg@x0+cg
+    itr = 1
+    max_itr=50
+    while (max(abs(x-x0))/max(abs(x))>TOL) and (itr<max_itr):
+        x0=x
+        x=Tg@x0+cg
+        itr += 1
+    return [Tg,x,itr]
+
