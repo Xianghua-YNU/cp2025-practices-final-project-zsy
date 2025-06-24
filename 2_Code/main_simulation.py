@@ -2,6 +2,7 @@
 主程序入口：用于运行主要的物理模拟。
 """
 import numpy as np
+import timeit
 from scipy.sparse.linalg import spsolve
 
 def run_simulation():
