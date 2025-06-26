@@ -43,21 +43,16 @@ def Gauss_Seidel(Nx, Ny, l_2):
     L2 = 1
     counter = 0
     while L2 > l_2:
-
         boundary_condition(T, Nx, Ny)
         T_0 = T.copy()
-
-        for m in range(1,Nx+1):
-            for n in range(1, Ny+1):
-                T[m,n] = 0.5*(dy**2/((dy**2+dx**2))*(T_0[m,n+1]+T[m,n-1])+dx**2/((dy**2+dx**2))*(T[m-1,n]+T_0[m+1,n]))
-
+        T[1:Nx+1, 1:Ny+1] = 0.5 * (dy**2 / (dy**2 + dx**2) * (T_0[1:Nx+1, 2:Ny+2] + T_0[1:Nx+1, 0:Ny]) +
+                                    dx**2 / (dy**2 + dx**2) * (T_0[0:Nx, 1:Ny+1] + T_0[2:Nx+2, 1:Ny+1]))
         Error = np.abs(T_0[1:Nx+1, 1:Ny+1] - T[1:Nx+1, 1:Ny+1])
         L2 = np.sqrt(np.mean(Error**2))
         L.append(L2)
-        counter += 1
         iteration.append(counter)
-    L = np.array(L)
-    iteration = np.array(iteration)
+        counter += 1
+
     return T[1:Nx+1, 1:Ny+1], iteration, L
 
 start_time_g =timeit.default_timer()
@@ -91,5 +86,6 @@ plt.plot(iter_g3, L2_g3, '-.', label = '30*30')
 plt.plot(iter_g4, L2_g4, '--', label = '40*40')
 plt.xlabel('Iteration number')
 plt.ylabel('L2')
+plt.savefig('Regarding the grid size and CPU running time')
 plt.legend()
 plt.show()
